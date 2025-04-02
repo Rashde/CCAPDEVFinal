@@ -1,0 +1,135 @@
+<div class="back-navigation">
+  <a href="/browse">← Back to Browse</a>
+</div>
+
+<section class="product-details">
+  <div class="breadcrumb">
+    <a href="/">Home</a> > 
+    <a href="/browse">Browse</a> > 
+    <span class="current-page">Product Details</span>
+  </div>
+
+  <div class="product-container">
+    <!-- Product Image -->
+    <div class="product-images">
+      <div class="main-image">
+        <img src="{{listing.image}}" alt="{{listing.title}}">
+      </div>
+    </div>
+
+    <!-- Product Info -->
+    <div class="product-info">
+      <div class="product-header">
+        <h1>{{listing.title}}</h1>
+        <div class="price">₱{{listing.price}}</div>
+        <p><strong>Condition:</strong> {{listing.condition}}</p>
+        <div class="category-tag">{{listing.category}}</div>
+      </div>
+
+      <div class="product-status">
+        <span class="status-badge available">Available</span>
+        <span class="post-date">Posted on {{formatDate listing.date "MMM DD, YYYY"}}</span>
+      </div>
+
+      <div class="product-description">
+        <h2>Description</h2>
+        <p>{{listing.description}}</p>
+      </div>
+
+      <!-- Seller Info -->
+      <div class="seller-info">
+        <h2>Seller Information</h2>
+        <div class="seller-profile">
+          <img src="{{#if listing.seller.profileImage}}{{listing.seller.profileImage}}{{else}}/images/default.png{{/if}}" alt="Seller Profile" class="seller-image">
+          <div class="seller-details">
+            <h3>{{listing.seller.fullName}}</h3>
+            <p class="seller-id">ID: {{listing.seller.studentId}}</p>
+            <p class="member-since">Member since {{formatDate listing.seller.createdAt "MMMM YYYY"}}</p>
+          </div>
+        </div>
+      </div>
+
+<div class="action-buttons">
+  <button class="btn-primary" id="messageSellerBtn"
+    data-contact="{{listing.seller.contactNumber}}"
+    data-facebook="{{listing.seller.facebook}}">
+    <span class="icon">✉</span> Message Seller
+  </button>
+
+  <button class="btn-secondary"><span class="icon">♡</span> Save Item</button>
+
+  <button class="btn-secondary" id="shareItemBtn">
+    <span class="icon">↗</span> Share
+  </button>
+</div>
+
+<!-- Share Popup -->
+<div id="sharePopup" class="popup success" style="display: none;">
+  🔗 Link copied to clipboard!
+</div>
+
+<!-- Contact Box at Bottom -->
+<div id="contactDetailsBox" class="contact-box hidden">
+  <h3>Contact Details:</h3>
+  <p><strong>Contact Number:</strong> <span id="sellerContactDisplay"></span></p>
+  <p><strong>Facebook:</strong> <a id="sellerFacebookDisplay" href="#" target="_blank">Visit</a></p>
+</div>
+
+<!-- Safety Notice -->
+<div class="safety-notice">
+  <h3>Safety Guidelines</h3>
+  <ul>
+    <li>✓ Meet in designated campus trading areas</li>
+    <li>✓ Verify items before payment</li>
+    <li>✓ Use DLSU email for communication</li>
+    <li>✓ Report suspicious behavior</li>
+  </ul>
+</div>
+
+</div> <!-- close product-info -->
+</div> <!-- close product-container -->
+</section>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const messageBtn = document.getElementById("messageSellerBtn");
+  const contactBox = document.getElementById("contactDetailsBox");
+  const contactSpan = document.getElementById("sellerContactDisplay");
+  const facebookLink = document.getElementById("sellerFacebookDisplay");
+
+  if (messageBtn && contactBox) {
+    messageBtn.addEventListener("click", () => {
+      const contact = messageBtn.dataset.contact;
+      const facebook = messageBtn.dataset.facebook;
+
+      if (contactBox.classList.contains("hidden")) {
+        contactSpan.textContent = contact || "Not available";
+        facebookLink.href = facebook || "#";
+        facebookLink.textContent = facebook || "Not available";
+        contactBox.classList.remove("hidden");
+      } else {
+        contactBox.classList.add("hidden");
+      }
+    });
+  }
+
+  const shareBtn = document.getElementById("shareItemBtn");
+  const sharePopup = document.getElementById("sharePopup");
+
+  if (shareBtn && sharePopup) {
+    shareBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        sharePopup.style.display = "block";
+        setTimeout(() => {
+          sharePopup.style.display = "none";
+        }, 3000);
+      } catch (err) {
+        alert("❌ Failed to copy link.");
+        console.error(err);
+      }
+    });
+  }
+});
+</script>
